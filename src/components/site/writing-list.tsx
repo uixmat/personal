@@ -5,7 +5,9 @@ export function WritingList({ posts }: { posts: Post[] }) {
   if (posts.length === 0) {
     return (
       <p className="text-ink-2 max-w-[44ch] font-serif text-lg [text-wrap:pretty]">
-        Nothing published yet. The first essay is on its way; follow along via{" "}
+        Nothing published yet. The first essay is on its way, starting with how
+        the charts on this site are built from real mountain data. Follow along
+        via{" "}
         <Link
           className="text-ink decoration-ink-3/50 hover:decoration-ink underline underline-offset-4"
           href="/writing/rss.xml"

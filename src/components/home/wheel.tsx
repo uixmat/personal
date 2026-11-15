@@ -29,6 +29,17 @@ export function Wheel({
   useMotionValueEvent(active, "change", (a) => setFocus(Math.round(a)));
   return (
     <div className="relative w-full">
+      {/* The drum is a visual; this list is the accessible (and agent-readable) version. */}
+      <ul className="sr-only">
+        {items.map((it) => (
+          <li key={it.name}>
+            {it.role}:{" "}
+            <a href={it.href} tabIndex={-1}>
+              {it.name}
+            </a>
+          </li>
+        ))}
+      </ul>
       <div className="relative h-[30rem] w-full [mask-image:linear-gradient(transparent,black_22%,black_78%,transparent)] [perspective:1000px]">
         <div className="absolute inset-0 [transform-style:preserve-3d]">
           {items.map((it, i) => (
@@ -79,15 +90,11 @@ function Item({
     Math.abs(deg) > 80 ? "hidden" : "visible"
   );
 
-  return (
-    <motion.a
-      className="group absolute inset-x-0 top-1/2 flex flex-col items-center gap-2 text-center [backface-visibility:hidden]"
-      href={item.href}
-      rel="noopener"
-      style={{ transform, opacity, filter, visibility }}
-      tabIndex={focused ? 0 : -1}
-      target="_blank"
-    >
+  const style = { transform, opacity, filter, visibility };
+  const className =
+    "group absolute inset-x-0 top-1/2 flex flex-col items-center gap-2 text-center [backface-visibility:hidden]";
+  const content = (
+    <>
       <span className="text-ink-3 text-sm">{item.role}</span>
       <span className="text-ink flex items-center gap-2 text-[clamp(2rem,4.6vw,4.25rem)] leading-none font-black tracking-[-0.045em]">
         {item.name}
@@ -96,6 +103,35 @@ function Item({
           className="text-ink-3 ease-out-strong group-hover:text-ink size-6 transition-[color,transform] duration-150 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
         />
       </span>
+    </>
+  );
+
+  // Only the item in focus is a link. The rest of the drum is depth, not
+  // content: its text is drawn with CSS `content`, so it stays out of the
+  // accessibility tree and contrast checks (the sr-only list carries it).
+  if (!focused) {
+    return (
+      <motion.div aria-hidden="true" className={className} style={style}>
+        <span
+          className="text-ink-3 text-sm before:content-[attr(data-text)]"
+          data-text={item.role}
+        />
+        <span
+          className="text-ink text-[clamp(2rem,4.6vw,4.25rem)] leading-none font-black tracking-[-0.045em] before:content-[attr(data-text)]"
+          data-text={item.name}
+        />
+      </motion.div>
+    );
+  }
+  return (
+    <motion.a
+      className={className}
+      href={item.href}
+      rel="noopener"
+      style={style}
+      target="_blank"
+    >
+      {content}
     </motion.a>
   );
 }

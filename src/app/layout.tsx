@@ -3,6 +3,7 @@ import { GeistSans } from "geist/font/sans";
 import { GeistSerif } from "geist/font/serif";
 import type { Metadata } from "next";
 import "./globals.css";
+import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://uixmat.dev"),
@@ -10,11 +11,18 @@ export const metadata: Metadata = {
     default: "Matt Litherland — Head of Product at Cal.com, author of Bklit UI",
     template: "%s — Matt Litherland",
   },
-  description:
-    "Matt Litherland is Head of Product at Cal.com and the author of Bklit UI. Design engineer in Veliko Tarnovo, Bulgaria, usually found in Pirin.",
+  description: site.description,
+  keywords: [...site.keywords],
+  authors: [{ name: site.name, url: site.url }],
   alternates: {
     types: { "application/rss+xml": "/writing/rss.xml" },
   },
+  openGraph: {
+    type: "profile",
+    siteName: site.name,
+    url: site.url,
+  },
+  twitter: { card: "summary_large_image", creator: "@uixmat" },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

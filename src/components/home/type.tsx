@@ -68,8 +68,11 @@ export function OutlineFill({
   from = "bottom",
   as: Tag = "span",
   className = "",
+  id,
 }: {
   children: ReactNode;
+  /** Goes on the wrapper, so the duplicated fill layer never repeats an id. */
+  id?: string;
   fill: MotionValue<number>;
   from?: FillFrom;
   as?: ElementType;
@@ -83,7 +86,7 @@ export function OutlineFill({
   };
   const clip = edges[from];
   return (
-    <Tag className={`relative block ${className}`}>
+    <Tag className={`relative block ${className}`} id={id}>
       <span className={`block ${STROKE}`}>{children}</span>
       <motion.span
         aria-hidden="true"

@@ -1,0 +1,8 @@
+<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+  <title>M</title>
+  <rect fill="#000" height="64" width="64" />
+  <path
+    d="M21.85 49L12.46 49L12.46 15L24.82 15L32 36.60L39.18 15L51.54 15L51.54 49L42.15 49L42.15 29.85L35.30 48.86L28.65 48.86L21.85 29.85"
+    fill="#fff"
+  />
+</svg>

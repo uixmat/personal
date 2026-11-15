@@ -204,3 +204,8 @@ Matt's studio portrait (black tee, clear frames, neutral backdrop) appears once,
   - **Winter setup:** 3D scroll wheel, no hover cards (rejected as distracting).
   - **Charts:** every time-series chart uses `TOOLTIP_STYLE` (`src/components/home/flow-tooltip.tsx`) and the dot-matrix background, and stays ≤ 60 points so Bklit keeps the crosshair spring and pill roll (above 60 it switches to static "discrete" mode).
   - **Nav wordmark:** UIXMAT. Footer: © year + logo-only socials.
+- 15 Nov 2026, performance and agent readiness:
+  - **Hero poster:** the hero's first frame is an image (`pirin-poster.png`). Three.js loads on first scroll, pointer or key press. Charts mount within 600px of the viewport. Lighthouse went from 70 to 100, and TBT from 2.8s to 30ms.
+  - **Winter wheel:** only the focused item is real content (a link). Rotated items draw their text with CSS `content`, and an sr-only list carries all seven products.
+  - **Agents:** Markdown negotiation, Markdown 404s, llms.txt, sitemap, robots and Person JSON-LD.
+

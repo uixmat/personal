@@ -7,12 +7,48 @@ import {
   useTransform,
 } from "motion/react";
 import dynamic from "next/dynamic";
-import { useRef } from "react";
+import Image from "next/image";
+import { useCallback, useEffect, useRef, useState } from "react";
+import poster from "../../../public/images/pirin-poster.png";
 import { MONOTONE } from "./palette";
 
 const Scene = dynamic(() => import("./pirin-scene").then((m) => m.PirinScene), {
   ssr: false,
 });
+
+const WAKE_EVENTS = [
+  "scroll",
+  "pointermove",
+  "pointerdown",
+  "touchstart",
+  "keydown",
+  "wheel",
+] as const;
+
+/**
+ * Three.js (~950 KB) isn't needed for the first frame — the flat Europe map —
+ * so that frame ships as an image and WebGL loads on the first interaction.
+ */
+function useWake(progress: MotionValue<number>) {
+  const [awake, setAwake] = useState(false);
+  useEffect(() => {
+    // Restored mid-scroll, or reduced motion (progress pinned to the end): wake now.
+    if (progress.get() > 0) {
+      setAwake(true);
+      return;
+    }
+    const wake = () => setAwake(true);
+    for (const e of WAKE_EVENTS) {
+      window.addEventListener(e, wake, { once: true, passive: true });
+    }
+    return () => {
+      for (const e of WAKE_EVENTS) {
+        window.removeEventListener(e, wake);
+      }
+    };
+  }, [progress]);
+  return awake;
+}
 
 const note = "font-mono text-ink-3 text-xs tabular-nums";
 
@@ -22,6 +58,24 @@ export function Pirin({ progress }: { progress: MotionValue<number> }) {
   const scaleLabel = useRef<HTMLSpanElement>(null);
   const trig = useRef<HTMLDivElement>(null);
   const exaggeration = useMotionValue(10);
+  const awake = useWake(progress);
+  const [ready, setReady] = useState(false);
+  const onReady = useCallback(() => setReady(true), []);
+
+  // Scale bar for the poster frame — same maths as the scene's first frame.
+  useEffect(() => {
+    const host = scale.current?.parentElement?.parentElement;
+    if (!(host && scale.current && scaleLabel.current)) {
+      return;
+    }
+    const zoom = host.clientWidth / 3400;
+    const km = 140 / zoom;
+    const pow = 10 ** Math.floor(Math.log10(km));
+    const n = km / pow;
+    const nice = (n >= 5 ? 5 : 1) * (n >= 2 && n < 5 ? 2 : 1) * pow;
+    scale.current.style.width = `${nice * zoom}px`;
+    scaleLabel.current.textContent = `${nice} km`;
+  }, []);
 
   const contourNote = useTransform(
     progress,
@@ -32,13 +86,27 @@ export function Pirin({ progress }: { progress: MotionValue<number> }) {
 
   return (
     <>
+      {/* Width-locked like the orthographic camera, so it lines up with the first WebGL frame. */}
+      <Image
+        alt=""
+        aria-hidden="true"
+        className="absolute top-1/2 left-0 h-auto w-full -translate-y-1/2 transition-opacity duration-300"
+        fetchPriority="high"
+        loading="eager"
+        sizes="100vw"
+        src={poster}
+        style={{ opacity: ready ? 0 : 1 }}
+      />
       <div className="absolute inset-0">
-        <Scene
-          exaggeration={exaggeration}
-          overlay={{ scale, scaleLabel, trig }}
-          palette={MONOTONE}
-          progress={progress}
-        />
+        {awake ? (
+          <Scene
+            exaggeration={exaggeration}
+            onReady={onReady}
+            overlay={{ scale, scaleLabel, trig }}
+            palette={MONOTONE}
+            progress={progress}
+          />
+        ) : null}
       </div>
       <div className="absolute bottom-0 left-0 flex flex-col gap-2">
         <span className={note} ref={scaleLabel} />

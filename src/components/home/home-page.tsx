@@ -114,16 +114,19 @@ function Hero({ config }: { config: PosterConfig }) {
           <Pirin progress={flight} />
         </div>
         <div className="h-full">
-          <div className="flex h-dvh min-h-[640px] flex-col items-center justify-center gap-8 px-6 text-center mix-blend-difference">
+          {/* Only the type blends; the avatar sits solid on top of the map. */}
+          <div className="flex h-dvh min-h-[640px] flex-col items-center justify-center gap-8 px-6 text-center">
             <Image
               alt="Matt Litherland"
-              className="size-16 rounded-full object-cover grayscale"
+              className="ring-night relative z-10 size-16 rounded-full object-cover ring-4 grayscale"
               placeholder="blur"
               priority
               sizes="64px"
               src={portrait}
             />
-            <h1 className={`${giant} text-[clamp(3.5rem,13.5vw,14rem)]`}>
+            <h1
+              className={`${giant} text-[clamp(3.5rem,13.5vw,14rem)] mix-blend-difference`}
+            >
               <OutlineFill fill={fill} from={config.fillFrom}>
                 Matt
               </OutlineFill>
@@ -131,7 +134,7 @@ function Hero({ config }: { config: PosterConfig }) {
                 Litherland
               </OutlineFill>
             </h1>
-            <p className="text-ink max-w-[34ch] font-serif text-xl [text-wrap:balance]">
+            <p className="text-ink max-w-[34ch] font-serif text-xl [text-wrap:balance] mix-blend-difference">
               Head of Product at Cal.com. Author of Bklit UI. Based in Veliko
               Tarnovo, mostly found in Pirin.
             </p>
@@ -209,7 +212,7 @@ function Launches({ config }: { config: PosterConfig }) {
             November 2026
           </h2>
           <p className="text-ink-2 max-w-[40ch] font-serif text-xl">
-            Five launches. I was responsible for all of them.
+            Five things I&apos;ve been working on.
           </p>
         </div>
         <ol className="divide-rule divide-y">
@@ -274,8 +277,9 @@ function Life({ config }: { config: PosterConfig }) {
             className={`${giant} text-[clamp(3rem,10.5vw,10.5rem)]`}
             fill={fill}
             from={config.fillFrom}
+            id="life-heading"
           >
-            <span id="life-heading">Off the clock</span>
+            Off the clock
           </OutlineFill>
           <p className="text-ink-2 max-w-[40ch] font-serif text-xl">
             Backcountry when there&apos;s snow. Enduro when there isn&apos;t.
@@ -335,10 +339,15 @@ function SpecSheet() {
             className="border-rule flex items-baseline gap-4 border-b px-6 py-3 sm:odd:border-r [&:nth-last-child(-n+2)]:border-b-0"
             key={k}
           >
-            <span className="text-sky w-6 font-mono text-[11px] tabular-nums">
-              {String(i + 1).padStart(2, "0")}
-            </span>
-            <dt className="text-ink-3 w-24 shrink-0 text-sm">{k}</dt>
+            <dt className="text-ink-3 flex w-32 shrink-0 items-baseline gap-4 text-sm">
+              <span
+                aria-hidden="true"
+                className="text-sky w-6 font-mono text-[11px] tabular-nums"
+              >
+                {String(i + 1).padStart(2, "0")}
+              </span>
+              {k}
+            </dt>
             <dd className="text-ink font-mono text-sm">{v}</dd>
           </div>
         ))}

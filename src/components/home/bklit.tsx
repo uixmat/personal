@@ -1,5 +1,6 @@
 import { IconVercel } from "central-icons";
 import type { ReactNode } from "react";
+import { meta } from "./bklit-meta";
 import {
   ContributionsChart,
   DownloadsChart,
@@ -7,8 +8,7 @@ import {
   SnowChart,
   StarsChart,
   TemperatureChart,
-} from "./bklit-charts";
-import { meta } from "./bklit-meta";
+} from "./lazy-charts";
 
 const n = new Intl.NumberFormat("en-GB");
 const compact = new Intl.NumberFormat("en-GB", {

@@ -373,11 +373,24 @@ export function PirinScene(props: {
   exaggeration: MotionValue<number>;
   palette: Palette;
   overlay: PirinOverlay;
+  /** Called once the first frame with real data has been drawn. */
+  onReady?: () => void;
 }) {
+  const { onReady, ...sceneProps } = props;
   const [data, setData] = useState<GeoData | null>(null);
   useEffect(() => {
     loadGeo().then(setData);
   }, []);
+  useEffect(() => {
+    if (!data) {
+      return;
+    }
+    // Two frames: one for R3F to mount the scene, one for it to paint.
+    const id = requestAnimationFrame(() =>
+      requestAnimationFrame(() => onReady?.())
+    );
+    return () => cancelAnimationFrame(id);
+  }, [data, onReady]);
 
   return (
     <Canvas
@@ -389,7 +402,7 @@ export function PirinScene(props: {
       gl={{ antialias: true, alpha: true }}
       orthographic
     >
-      {data ? <Scene data={data} {...props} /> : null}
+      {data ? <Scene data={data} {...sceneProps} /> : null}
     </Canvas>
   );
 }

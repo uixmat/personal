@@ -7,6 +7,13 @@ import { getPosts } from "@/lib/writing";
 export const metadata: Metadata = {
   title: "Writing",
   description: "Essays on design engineering, interfaces, and motion.",
+  alternates: {
+    canonical: "/writing",
+    types: {
+      "application/rss+xml": "/writing/rss.xml",
+      "text/markdown": "/writing.md",
+    },
+  },
 };
 
 export default async function WritingPage() {
@@ -23,6 +30,19 @@ export default async function WritingPage() {
           <h1 className="mb-16 max-w-[16ch] text-5xl font-medium tracking-[-0.035em] md:text-6xl">
             Notes on building interfaces.
           </h1>
+          <p className="text-ink-2 -mt-8 mb-16 max-w-[52ch] font-serif text-xl [text-wrap:pretty]">
+            Essays by Matt Litherland, Head of Product at Cal.com and author of
+            Bklit UI, on design engineering, shipping product, interface motion
+            and data visualisation, and the occasional trail report from the
+            Pirin mountains in Bulgaria. New posts go out via{" "}
+            <a
+              className="text-ink decoration-ink-3/50 hover:decoration-ink underline underline-offset-4"
+              href="/writing/rss.xml"
+            >
+              RSS
+            </a>
+            .
+          </p>
           <WritingList posts={posts} />
         </div>
       </main>

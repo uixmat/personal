@@ -20,7 +20,18 @@ export async function generateMetadata({
     return {};
   }
   const { meta } = await getPost(slug);
-  return { title: meta.title, description: meta.summary };
+  return {
+    title: meta.title,
+    description: meta.summary,
+    alternates: {
+      canonical: `/writing/${slug}`,
+      types: {
+        "application/rss+xml": "/writing/rss.xml",
+        "text/markdown": `/writing/${slug}.md`,
+      },
+    },
+    openGraph: { type: "article", publishedTime: meta.date },
+  };
 }
 
 export default async function PostPage({
