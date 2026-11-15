@@ -1,0 +1,22 @@
+export const metadata = {
+  title: "Post template",
+  summary: "A draft that shows how posts are written. Hidden in production.",
+  date: "2026-11-15",
+  draft: true,
+};
+
+Posts live in `src/content/writing` as MDX. Export `metadata` with a title, summary, and ISO date, and set `draft: true` until it's ready. Drafts only render in development, so this one never ships.
+
+## Headings get balanced
+
+Body copy is set in Geist Serif at a measured 65ch, with code in `Geist Mono`. Links like [Bklit UI](https://bklit.com) carry a quiet underline.
+
+> Pull quotes sit on a single rule, like a margin note.
+
+```tsx
+export function Hello() {
+  return <p>Hello from MDX</p>;
+}
+```
+
+Delete this file once the first real post exists.
